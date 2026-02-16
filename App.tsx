@@ -1,15 +1,15 @@
-
-import React, { useState, useEffect } from 'react';
-import ConfigScreen from './components/ConfigScreen';
-import TrainingScreen from './components/TrainingScreen';
-import { AppState, TrainingConfig, FavoriteCombo } from './types';
-import { STORAGE_KEY } from './constants';
+import React, { useState, useEffect } from "react";
+import ConfigScreen from "./components/ConfigScreen";
+import TrainingScreen from "./components/TrainingScreen";
+import { AppState, TrainingConfig, FavoriteCombo } from "./types";
+import { STORAGE_KEY } from "./constants";
 
 const App: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<AppState>(AppState.SETUP);
   const [config, setConfig] = useState<TrainingConfig>({
-    selectedColors: ['Red', 'Green', 'Blue'],
-    delaySeconds: 5
+    selectedColors: ["Red", "Green", "Blue"],
+    delaySeconds: 5,
+    voiceEnabled: true,
   });
   const [favorites, setFavorites] = useState<FavoriteCombo[]>([]);
 
@@ -20,7 +20,7 @@ const App: React.FC = () => {
       try {
         setFavorites(JSON.parse(saved));
       } catch (e) {
-        console.error('Failed to parse favorites', e);
+        console.error("Failed to parse favorites", e);
       }
     }
   }, []);
@@ -30,7 +30,7 @@ const App: React.FC = () => {
       ...config,
       id: crypto.randomUUID(),
       name,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     };
     const updated = [newFav, ...favorites].slice(0, 10); // Keep last 10
     setFavorites(updated);
@@ -38,7 +38,7 @@ const App: React.FC = () => {
   };
 
   const deleteFavorite = (id: string) => {
-    const updated = favorites.filter(f => f.id !== id);
+    const updated = favorites.filter((f) => f.id !== id);
     setFavorites(updated);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   };
@@ -46,16 +46,17 @@ const App: React.FC = () => {
   const loadFavorite = (fav: FavoriteCombo) => {
     setConfig({
       selectedColors: fav.selectedColors,
-      delaySeconds: fav.delaySeconds
+      delaySeconds: fav.delaySeconds,
+      voiceEnabled: fav.voiceEnabled ?? true,
     });
   };
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black">
       {currentStep === AppState.SETUP ? (
-        <ConfigScreen 
-          config={config} 
-          setConfig={setConfig} 
+        <ConfigScreen
+          config={config}
+          setConfig={setConfig}
           onStart={() => setCurrentStep(AppState.TRAINING)}
           favorites={favorites}
           onSaveFavorite={saveFavorite}
@@ -63,9 +64,9 @@ const App: React.FC = () => {
           onDeleteFavorite={deleteFavorite}
         />
       ) : (
-        <TrainingScreen 
-          config={config} 
-          onStop={() => setCurrentStep(AppState.SETUP)} 
+        <TrainingScreen
+          config={config}
+          onStop={() => setCurrentStep(AppState.SETUP)}
         />
       )}
     </div>

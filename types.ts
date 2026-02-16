@@ -1,5 +1,4 @@
-
-export type TrainingColor = 'Red' | 'Orange' | 'Green' | 'Yellow' | 'Blue';
+export type TrainingColor = "Red" | "Orange" | "Green" | "Yellow" | "Blue";
 
 export interface ColorDefinition {
   name: TrainingColor;
@@ -10,6 +9,7 @@ export interface ColorDefinition {
 export interface TrainingConfig {
   selectedColors: TrainingColor[];
   delaySeconds: number;
+  voiceEnabled: boolean;
 }
 
 export interface FavoriteCombo extends TrainingConfig {
@@ -19,6 +19,6 @@ export interface FavoriteCombo extends TrainingConfig {
 }
 
 export enum AppState {
-  SETUP = 'SETUP',
-  TRAINING = 'TRAINING'
+  SETUP = "SETUP",
+  TRAINING = "TRAINING",
 }
